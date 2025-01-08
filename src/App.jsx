@@ -1,65 +1,11 @@
-import { useState,useEffect } from 'react'
 import './App.css'
 import { Header } from './components/Header'
 import { Guitar } from './components/Guitar'
-import { db } from './data/db'
+import { useCart } from './hooks/useCart'
 
 function App() {
 
-  const [data, setData] = useState(db);
-  const [cart,setCart] = useState([]);
-  const maxItem = 5
-  const minItem = 1
-
-  const addToCart = (item) =>{
-    const itemExiste = cart.findIndex(guitar => guitar.id === item.id)
-
-    if(itemExiste >=0){
-
-      if(cart[itemExiste].quantity >= maxItem)return
-      
-      const updatedCart = [...cart]
-      updatedCart[itemExiste].quantity++
-      setCart(updatedCart)
-    }else{
-      item.quantity = 1
-      setCart([...cart,item])
-    }
-  }
-
-  const removeFromCart = (id) =>{
-    setCart( prevCart => prevCart.filter(guitar => guitar.id !== id))
-  }
-
-  const increaseQuantity = (id) =>{
-    const updatedCart = cart.map(item =>{
-      if(item.id === id && item.quantity < maxItem){
-        return{
-          ...item,
-          quantity:item.quantity +1 
-        }
-      }
-      return item
-    })
-    setCart(updatedCart)
-  }
-
-  const decreaseQuantity = (id) =>{
-    const updatedCart = cart.map(item =>{
-      if (item.id === id && item.quantity > minItem){
-        return{
-          ...item,
-          quantity:item.quantity -1
-        }
-      }
-      return item
-    })
-    setCart(updatedCart)
-  }
-
-  const clearCart = () =>{
-    setCart([])
-  }
+  const {data,cart,addToCart,removeFromCart,increaseQuantity, decreaseQuantity,clearCart} = useCart()
 
   return (
     <>
@@ -79,7 +25,6 @@ function App() {
             <Guitar
               key={guitar.id}
               guitar={guitar}
-              setCart={setCart}
               addToCart={addToCart}
             />
           ))}
